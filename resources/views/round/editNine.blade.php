@@ -1,8 +1,12 @@
 @extends('layouts.template')
+@section('styles')
+    input[type="checkbox"] {
+      transform:scale(1.5, 1.5);
+    }
+@endsection
 @section('content')
-{!!Form::open(['action' => 'ScoreController@store'])!!}
-{!!Form::hidden('roundId', $round->id)!!}
 <div class="flex-center position-ref full-height">
+    {!!Form::model($round, ['method' => 'PATCH', 'action' => ['RoundController@update', $round->id]])!!}
     <table id='golfcard' class='form-group'>
         <tr class='red'>
             <th colspan="11" class='courseName' style="text-align: left">
@@ -14,7 +18,6 @@
             <th style="text-align: right">HOLE</th>
             @foreach ( $scorecard->holes as $hole )
                 <td>{!!$hole->hole_number!!}</td>
-                {!!Form::hidden('holeNumbers[]', $hole->hole_number)!!}
             @endforeach
             <th>OUT</th>
         </tr>
@@ -34,46 +37,61 @@
         </tr>
         <tr class="grey">
             <th style="text-align: right">SCORE</th>
-            @foreach( $scorecard->holes as $hole )
-                <td id='scoreField' style='width:100%'>{!!Form::text('scores[]', null )!!}</td>
+            @foreach( $round->scores as $key=>$score )
+                <td id='scoreField' style='width:100%'>{!!Form::text('updatedScores[]', $score->total )!!}</td>
             @endforeach
-            <td></td>
+            <td id='scoreField'>{!!$round->total_score!!}</td>
         </tr>
+
         <tr class='grey'>
             <th style="text-align: right">GIR</td>
-            @foreach( $scorecard->holes as $hole )
-                <td>{!!Form::checkbox('GIRs[]', $hole->hole_number, false,['class' => 'checkcheky'])!!}</td>
+            @foreach( $round->scores as $key=>$score )
+                @if($score->gir != 1)
+                    <td>{!!Form::checkbox('updatedGIRs[]', $score->hole_num, false,['class' => 'checkcheky'])!!}</td>
+                @else
+                    <td>{!!Form::checkbox('updatedGIRs[]', $score->hole_num, true,['class' => 'checkcheky'])!!}</td>
+                @endif
             @endforeach
             <td></td>
         </tr>
-        <tr class="grey">
+
+        <tr class='grey'>
             <th style="text-align: right">FAIRWAY</td>
-            @foreach( $scorecard->holes as $hole )
-                <td>{!!Form::checkbox('fairways[]', $hole->hole_number, false,['class' => 'checkcheky'])!!}</td>
+            @foreach( $round->scores as $key=>$score )
+                @if($score->fairway != 1)
+                    <td>{!!Form::checkbox('updatedFairways[]', $score->hole_num, false,['class' => 'checkcheky'])!!}</td>
+                @else
+                    <td>{!!Form::checkbox('updatedFairways[]', $score->hole_num, true,['class' => 'checkcheky'])!!}</td>
+                @endif
             @endforeach
             <td></td>
         </tr>
+
         <tr class='grey'>
             <th style="text-align: right">PENALTY</td>
-            @foreach( $scorecard->holes as $hole )
-                <td>{!!Form::checkbox('penalties[]', $hole->hole_number, false,['class' => 'checkcheky'])!!}</td>
+            @foreach($round->scores as $key=>$score)
+                @if($score->penalty != 1)
+                    <td>{!!Form::checkbox('updatedPenalties[]', $score->hole_num, false,['class' => 'checkcheky'])!!}</td>
+                @else
+                    <td>{!!Form::checkbox('updatedPenalties[]', $score->hole_num, true,['class' => 'checkcheky'])!!}</td>
+                @endif
             @endforeach
             <td></td>
         </tr>
         <tr class='gold'>
-            <th style="text-align: right">HANDICAP</td>
-                @foreach ($scorecard->holes as $hole)
+            <th style="text-align: right">HANDICAP</th>
+                        @foreach($scorecard->holes as $hole)
                     <td id='scoreField'>{!!$hole->handicap!!}</td>
                 @endforeach
             <td>OUT</td>
         </tr>
         <tr class='button-row'>
             <th colspan="11" style="text-align:right">
-                <a href={!! URL::previous() !!} class="btn btn-primary btn-sm">Back</a>
-                {!!Form::submit( 'Create', ['class'=>'btn btn-primary'] )!!}
+                <a href={!!URL::previous()!!} class="btn btn-primary btn-sm">Back</a>
+                {!!Form::submit('Update', ['class'=>'btn btn-success btn-sm'])!!}
             </th>
         </tr>
     </table>
+    {!!Form::close()!!}
 </div>
-{!!Form::close()!!}
 @endsection

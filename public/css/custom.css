@@ -1,5 +1,5 @@
 html, body {
-    /* background-image: url('/storage/img/golfWallpaper.jpg'); */
+    background-image: url('/storage/img/golfWallpaper.jpg');
 
     -webkit-background-size: cover !important;
     -moz-background-size: cover !important;
@@ -26,8 +26,8 @@ html, body {
 
 .flex-landing-box {
   background-color: #f1f1f1;
-  width: 350px;
-  min-height: 350px;
+  width: 300px;
+  min-height: 300px;
   margin: 50px;
   padding: 20px;
   text-align: center;
@@ -41,6 +41,14 @@ html, body {
   box-shadow: 10px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0)
 }
 
+.flex-boy-div{
+    flex-wrap: nowrap;
+
+}
+.flex-boy-col{
+    flex-wrap: nowrap;
+
+}
 
 .full-height {
     height: 100vh;
@@ -87,26 +95,37 @@ html, body {
 
 
 /* SCORECARD COLORS */
-.white {
+.white-back {
     background-color: #fff;
     color: #636b6f;
 }
 
-.blue {
+.blue-back {
     background-image: linear-gradient(rgb(53 98 147), rgb(135,206,235));
     color: #fff;
 }
-.green {
+.green-back {
       background-image: linear-gradient(rgb(70 102 88), rgb(143,188,143));
       color: white;
 }
 
-.red {
+.red-back {
       background-image: linear-gradient(rgb(168 63 62)40%, rgb(240,128,128));
       color: white;
 }
 
-.gold {
+.black-back {
+      background-image: linear-gradient(rgb(25, 25, 25)40%, rgb(111,111,111));
+      color: white;
+}
+
+.redColor{
+    color: red;
+}
+
+
+
+.gold-back {
     background-image: linear-gradient(rgb(255,215,0), rgb(240,230,140));
 }
 
@@ -114,6 +133,10 @@ html, body {
     background-color: #f2f2f2;
     background-image: linear-gradient(rgb(220,220,220), rgb(255,255,255));
     color: #636b6f;
+}
+
+.greenColor{
+    color: green;
 }
 
 .center {
@@ -161,9 +184,9 @@ margin-right:auto;
     padding: 0px;
 }
 
-input[type="checkbox"] {
+/* input[type="checkbox"] {
   transform:scale(1.5, 1.5);
-}
+} */
 
 .wide {
   width: 20%;
@@ -232,16 +255,6 @@ input[type="checkbox"] {
     box-shadow: 10px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0)
 }
 
-.flex-container {
-  display: flex;
-  height:100vh;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  /* align-content: space-between; */
-  /* background-color: DodgerBlue; */
-}
-
 .flex-div {
   background-color: #f1f1f1;
   width: 300px;
@@ -260,15 +273,15 @@ input[type="checkbox"] {
 }
 
 .flex-div-li {
-    color: rgb(53 98 147);
+    /* color: rgb(53 98 147); */
     text-align: left !important;
     list-style-image: url('/storage/img/golf-ball-bullett.png');
-
+    line-height: 20px;
 }
-.flex-div-li:hover{
+/* .flex-div-li:hover{
 color:red;
 cursor: pointer;
-}
+} */
 
 .addBoyCheckbox{
     margin-right: 10px;
@@ -292,4 +305,62 @@ cursor: pointer;
 
 .btn-div{
     padding: 20px;
+}
+
+#dayBox {
+    margin: 50px;
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    -webkit-box-shadow: 10px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+    box-shadow: 10px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+}
+
+#dayTable {
+    /* font-family: arial, sans-serif; */
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 5px;
+    color: #636b6f;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+
+}
+
+#dayTable td, th {
+    min-width: 100px;
+    /* color: rgb(53 98 147);
+    text-align: center !important; */
+    border: 1px solid #636b6f;
+    text-align: center;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #E8E8E8;
+}
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+.dayBoxHeader{
+    font-size: 25px;
+    text-align: left;
+    margin:10px;
+    padding:15px 15px 5px 15px;;
+    /* background-color: red; */
+}
+.nameClick{
+    color: #0000aa;
+    margin-bottom: 0;
+}
+.nameClick:hover{
+    cursor: pointer;
+}
+
+.formTextFieldDiv{
+    padding: 10px;
+}
+
+.statsFirstCol{
+    text-align: right;
 }

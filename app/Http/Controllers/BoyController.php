@@ -15,83 +15,17 @@ class BoyController extends Controller
      */
     public function index()
     {
-        $mondays = Boy::where('monday',1)->get();
-        $wednesdays = Boy::where('wednesday',1)->get();
-        $fridays = Boy::where('friday',1)->get();
-        $outings = Boy::where('outing',1)->get();
-        $mondayLeader = $this->getLeader($mondays);
-        dd($mondayLeader);
-        $wednesdayLeader;
-        $fridayLeader;
-        $outingLeader;
+        $mondays = Boy::getMondays();
+        $wednesdays = Boy::getWednesdays();
+        $fridays = Boy::getFridays();
+        $outings = Boy::getOutings();
+        $mondayLeader = Boy::getMonLeader();
+        $wednesdayLeader = Boy::getWedLeader();
+        $firdayLeader = Boy::getFriLeader();
+        $outingLeader = Boy::getOutLeader();
 
-
-
-
-
-        //get Monday's leader
-        // $monLeaderAvg = 1000;
-        // foreach ($mondays as $key => $boy) {
-        //      $boyAvg = $boy->mondayBoyAverage();
-        //      echo $boy->first_name;
-        //      echo $boyAvg;
-        //     if( $boyAvg < $leaderAvg) {
-        //         $leaderAvg = $boyAvg;
-        //         $mondayLeader = $boy;
-        //     }
-        // }
-        //
-        // //get Wednesday's leader
-        // $wedLeaderAvg = 1000;
-        // foreach ($wednesday as $key => $boy) {
-        //      $boyAvg = $boy->mondayBoyAverage();
-        //      echo $boy->first_name;
-        //      echo $boyAvg;
-        //     if( $boyAvg < $leaderAvg) {
-        //         $wedLeaderAvg = $boyAvg;
-        //         $wednesdayLeader = $boy;
-        //     }
-        // }
-        //
-        // //get Monday's leader
-        // $friLeaderAvg = 1000;
-        // foreach ($mondays as $key => $boy) {
-        //      $boyAvg = $boy->mondayBoyAverage();
-        //      echo $boy->first_name;
-        //      echo $boyAvg;
-        //     if( $boyAvg < $leaderAvg) {
-        //         $friLeaderAvg = $boyAvg;
-        //         $fridayLeader = $boy;
-        //     }
-        // }
-        // //get Monday's leader
-        // $outLeaderAvg = 1000;
-        // foreach ($mondays as $key => $boy) {
-        //     $boyAvg = $boy->mondayBoyAverage();
-        //     if( $boyAvg < $leaderAvg) {
-        //         $outLeaderAvg = $boyAvg;
-        //         $outingLeader = $boy;
-        //     }
-        // }
-        // return view('boy.index', compact('mondays', 'wednesdays', 'fridays', 'outings'));
+        return view('boy.index', compact('mondays', 'wednesdays', 'fridays', 'outings', 'mondayLeader', 'wednesdayLeader', 'firdayLeader', 'outingLeader'));
     }
-
-
-    public function getLeader($boys){
-        $leader;
-        $leaderAvg = 1000;
-        foreach ($boys as $key => $boy) {
-            echo $boy->first_name;
-            $boyAvg = $boy->mondayBoyAverage();
-            if( $boyAvg < $leaderAvg) {
-                $outLeaderAvg = $boyAvg;
-                $leader = $boy;
-            }
-        }
-        dd($leader);
-        // return ($this->$leader);
-    }
-
 
     /**
      * Show the form for creating a new resource.
@@ -142,8 +76,12 @@ class BoyController extends Controller
      */
     public function show($id)
     {
+        $mondayLeader = Boy::getMonLeader();
+        $wednesdayLeader = Boy::getWedLeader();
+        $fridayLeader = Boy::getFriLeader();
+        $outingLeader = Boy::getOutLeader();
         $boy = Boy::findOrFail($id);
-        return view('boy.show', compact('boy'));
+        return view('boy.show', compact('boy', 'mondayLeader', 'wednesdayLeader', 'fridayLeader', 'outingLeader'));
     }
 
     /**
@@ -167,6 +105,7 @@ class BoyController extends Controller
      */
     public function update(Request $request, $id)
     {
+
 
         $boy = Boy::findOrFail($id);
         $monday = $request->get('mon');

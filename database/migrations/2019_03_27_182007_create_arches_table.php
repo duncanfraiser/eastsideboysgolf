@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateScorecardsTable extends Migration
+class CreateArchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateScorecardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('scorecards', function (Blueprint $table) {
+        Schema::create('arches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->integer('slope_rating');
-            $table->decimal('course_rating',8,1);
-            $table->integer('total_holes');
+            $table->integer('yr');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +28,6 @@ class CreateScorecardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scorecards');
+        Schema::dropIfExists('arches');
     }
 }

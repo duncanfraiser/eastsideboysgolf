@@ -26,11 +26,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                        {!!Form::submit('Add Golfer',['class'=>'btn btn-success btn-sm'])!!}
-                    </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    {!!Form::submit('Add Golfer',['class'=>'btn btn-success btn-sm'])!!}
+                </div>            
             {!!Form::close()!!}
         </div>
     </div>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hole extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'scorecard_id',
         'hole_number',

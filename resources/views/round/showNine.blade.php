@@ -11,7 +11,7 @@
         <tr class='blue'>
             <th style="text-align: right">HOLE</th>
             @foreach ( $scorecard->holes as $hole )
-                <td>{!!$hole->ole_number!!}</td>
+                <td>{!!$hole->hole_number!!}</td>
             @endforeach
             <th>OUT</th>
         </tr>
@@ -74,12 +74,20 @@
                 @endif
             @endforeach
             <td></td>
+        </tr>
         <tr class='gold'>
             <th style="text-align: right">HANDICAP</th>
                 @foreach ($scorecard->holes as $hole)
                     <td id='scoreField'>{!!$hole->handicap!!}</td>
                 @endforeach
             <td>OUT</td>
+        </tr>
+        <tr class='button-row'>
+            <th colspan="11" style="text-align:right">
+                <a href={!!url('/round/'.$round->id.'/edit')!!} class="btn btn-danger btn-sm">Edit Round</a>
+                <a href={!!URL::previous()!!} class="btn btn-primary btn-sm">Back</a>
+                <a href={!!url('/')!!} class="btn btn-success btn-sm">Home</a>
+            </th>
         </tr>
     </table>
 </div>

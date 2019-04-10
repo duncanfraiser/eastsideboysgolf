@@ -10,10 +10,14 @@ class Score extends Model
     use SoftDeletes;
     protected $fillable = [
         'round_id',
+        'scorecard_id',
         'hole_num',
+        'par',
         'total',
+        'putt',
         'gir',
         'fairway',
+        'sand',
         'penalty',
     ];
     public function round(){

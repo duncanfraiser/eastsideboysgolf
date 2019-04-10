@@ -25,7 +25,7 @@ class ScorecardController extends Controller
      */
     public function create()
     {
-        return view('scorecard.create');
+        // return view('scorecard.create');
     }
 
     /**
@@ -38,17 +38,20 @@ class ScorecardController extends Controller
     {
         $sc = new Scorecard([
           'name' => $request->get('name'),
+          'course_rating' => $request->get('courseRating'),
+          'slope_rating' => $request->get('slopeRating'),
           'total_holes' => $request->get('totalHoles'),
         ]);
+
         $sc->save();
         $frontHoleNums = [1,2,3,4,5,6,7,8,9];
 
         if( $sc->total_holes == 9 ){
-            return view( '/hole/createNine', compact( 'sc', 'frontHoleNums' ) );
+            return view( '/hole/createNineHoleScorecard', compact( 'sc', 'frontHoleNums' ) );
         }
         else{
             $backHoleNums = [10,11,12,13,14,15,16,17,18];
-            return view( '/hole/createEighteen', compact( 'sc','frontHoleNums', 'backHoleNums' ) );
+            return view( '/hole/createEighteenHoleScorecard', compact( 'sc','frontHoleNums', 'backHoleNums' ) );
         }
 
     }
@@ -62,16 +65,10 @@ class ScorecardController extends Controller
     public function show($id)
     {
         $scorecard = Scorecard::findOrFail($id);
-        dd($scorecard->holes());
-
-
-        
         if( $scorecard->total_holes == 9 ){
-            return view( 'scorecard.nineShow', compact('scorecard') );
+            return view( 'scorecard.nineShowOrInput', compact('scorecard') );
         } else {
-            $frontNine = $scorecard->holes()->where('hole_number', '<=', 9)->get();
-            $backNine = $scorecard->holes()->where('hole_number', '>', 9)->get();
-            return view('scorecard.eighteenShow', compact('scorecard', 'frontNine', 'backNine'));
+            return view('scorecard.eighteenShowOrInput', compact('scorecard'));
         }
     }
 
@@ -83,7 +80,12 @@ class ScorecardController extends Controller
      */
     public function edit($id)
     {
-        //
+        $scorecard = Scorecard::findOrFail($id);
+        if($scorecard->total_holes!=9){
+            return view('scorecard.editCardEighteen', compact('scorecard'));
+        }else{
+            return view('scorecard.editCardNine', compact('scorecard'));
+        }
     }
 
     /**
@@ -95,7 +97,22 @@ class ScorecardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $scorecard = Scorecard::findOrFail($id);
+        $scorecard->name = $request->name;
+        $scorecard->course_rating = $request->course_rating;
+        $scorecard->slope_rating = $request->slope_rating;
+        $scorecard->save();
+        $updatedPars = $request->get('updatedPars');
+        $updatedWhites = $request->get('updatedWhites');
+        $updatedHandicaps = $request->get('updatedHandicaps');
+
+        foreach ($scorecard->holes as $key=>$hole) {
+            $hole->par = $updatedPars[$key];
+            $hole->whites = $updatedWhites[$key];
+            $hole->handicap = $updatedHandicaps[$key];
+            $hole->save();
+        }
+        return redirect('/');
     }
 
     /**
@@ -106,6 +123,9 @@ class ScorecardController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $scorecard = Scorecard::findOrFail($id);
+        $scorecard->holes()->delete();
+        $scorecard->delete();
+        return redirect('/');
     }
 }

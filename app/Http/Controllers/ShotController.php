@@ -43,7 +43,7 @@ class ShotController extends Controller
         ]);
         $shot->save();
         $boy = Boy::findorfail($shot->boy_id);
-        return redirect('/boy')->with('success', $boy->first_name."'s Round has been added.");
+        return redirect('/')->with('success', $boy->first_name."'s Round has been added.");
     }
 
     /**

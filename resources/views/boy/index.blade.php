@@ -3,95 +3,85 @@
 @endsection
 @section('content')
     <div class="flex-container">
-
-
-
-        <div class="flex-landing-box">
-            <h3>Monday</h3>
-            @foreach ($mondays as $key => $mon)
-                <li class="flex-div-li"
-                    data-toggle="modal"
-                    data-target="#boyShot"
-                    data-id={{$mon->id}}
-                    data-firstname={{$mon->first_name}}
-                    data-id={{$mon->id}}
-                    data-day="monday"
-                    onclick="getBoyHiddenData(this)">
-                    {!!$mon->first_name!!}
-                </li>
-            @endforeach
+        <div id="dayBox">
+            <table id="dayTable">
+                <tr>
+                    <th colspan="3" class='dayBoxHeader'>Monday</th>
+                </tr>
+                <tr>
+                    <th colspan="3">Current Leader: {!!$mondayLeader->first_name!!} {!!$mondayLeader->last_name!!}</th>
+                </tr>
+                <tr>
+                    <th>Golfer</th>
+                    <th>Average Score</th>
+                    <th>Strokes Given</th>
+                </tr>
+                @foreach ($mondays as $key => $mon)
+                    <tr>
+                        <td>
+                            <a data-toggle="modal"
+                                data-target="#boyShot"
+                                data-id={{$mon->id}}
+                                data-firstname={{$mon->first_name}}
+                                data-id={{$mon->id}}
+                                data-day="monday"
+                                onclick="getBoyHiddenData(this)">
+                                {!!$mon->first_name!!} {!!$mon->last_name!!}
+                            </a>
+                        </td>
+                        <td> {!!$mon->mondayBoyAverage()!!}</td>
+                        <td>{!!$mon->behindMonLeader($mondayLeader)!!}</td>
+                    </tr>
+                @endforeach
+            </table>
         </div>
-
-
-
-        <div class="flex-landing-box">
-            <h3>Wednesday</h3>
-            @foreach ($wednesdays as $key => $wed)
-                <li class="flex-div-li"
-                    data-toggle="modal"
-                    data-target="#boyShot"
-                    data-id={{$wed->id}}
-                    data-firstname={{$wed->first_name}}
-                    data-id={{$wed->id}}
-                    data-day="wednesday"
-                    onclick="getBoyHiddenData(this)">
-                    {!!$wed->first_name!!}
-                </li>
-            @endforeach
-        </div>
-
-
-
-        <div class="flex-landing-box">
-            <h3>Friday</h3>
-            @foreach ($fridays as $key => $fri)
-                <li class="flex-div-li"
-                    data-toggle="modal"
-                    data-target="#boyShot"
-                    data-id={{$fri->id}}
-                    data-firstname={{$fri->first_name}}
-                    data-id={{$fri->id}}
-                    data-day="friday"
-                    onclick="getBoyHiddenData(this)">
-                    {!!$fri->first_name!!}
-                </li>
-            @endforeach
-        </div>
-
-
-        <div class="flex-landing-box">
-            <h3>Outing</h3>
-            @foreach ($outings as $key => $out)
-                <li class="flex-div-li"
-                    data-toggle="modal"
-                    data-target="#boyShot"
-                    data-id={{$out->id}}
-                    data-firstname={{$out->first_name}}
-                    data-id={{$out->id}}
-                    data-day="outing"
-                    onclick="getBoyHiddenData(this)">
-                    {!!$out->first_name!!}
-                </li>
-            @endforeach
+        <div id="dayBox">
+            <table id="dayTable">
+                <tr>
+                    <th colspan="3" class='dayBoxHeader'>Wednesday</th>
+                </tr>
+                <tr>
+                    <th colspan="3">Current Leader: {!!$wednesdayLeader->first_name!!} {!!$wednesdayLeader->last_name!!}</th>
+                </tr>
+                <tr>
+                    <th>Golfer</th>
+                    <th>Average Score</th>
+                    <th>Strokes Given</th>
+                </tr>
+                @foreach ($wednesdays as $key => $wed)
+                    <tr>
+                        <td>
+                            <a data-toggle="modal"
+                                data-target="#boyShot"
+                                data-id={{$wed->id}}
+                                data-firstname={{$wed->first_name}}
+                                data-id={{$wed->id}}
+                                data-day="wednesday"
+                                onclick="getBoyHiddenData(this)">
+                                {!!$wed->first_name!!} {!!$wed->last_name!!}
+                            </a>
+                        </td>
+                        <td> {!!$wed->wednesdayBoyAverage()!!}</td>
+                        <td>{!!$wed->behindWedLeader($wednesdayLeader)!!}</td>
+                    </tr>
+                @endforeach
+            </table>
         </div>
 
     </div>
-    {{-- modals --}}
-    @include('shot.create');
-    @include('boy.create');
+{{-- modals --}}
+@include('shot.create');
+@include('boy.create');
+@endsection
+@section('scripts')
+    function getBoyHiddenData(identifier){
+        document.getElementById("addGolferModalLabel").innerHTML = "Enter "+$(identifier).data('firstname')+"'s Score";
+         document.getElementById("hiddenBoyId").value = $(identifier).data('id');
+         document.getElementById("hiddenBoyDay").value = $(identifier).data('day');
+     }
 
-
-    @endsection
-
-    @section('scripts')
-        function getBoyHiddenData(identifier){
-            document.getElementById("addGolferModalLabel").innerHTML = "Enter "+$(identifier).data('firstname')+"'s Score";
-             document.getElementById("hiddenBoyId").value = $(identifier).data('id');
-             document.getElementById("hiddenBoyDay").value = $(identifier).data('day');
-         }
-
-         function editGolferDataBind(identifier){
-             document.getElementById("editGolferModalLabel").innerHTML = "Enter "+$(identifier).data('firstname')+"'s Score";
-              document.getElementById("hiddenBoyId").value = $(identifier).data('id');
-          }
-    @endsection
+     function editGolferDataBind(identifier){
+         document.getElementById("editGolferModalLabel").innerHTML = "Enter "+$(identifier).data('firstname')+"'s Score";
+          document.getElementById("hiddenBoyId").value = $(identifier).data('id');
+      }
+@endsection

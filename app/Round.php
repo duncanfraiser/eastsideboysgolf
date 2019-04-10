@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Scorecard;
 
 class Round extends Model
 {
@@ -16,4 +17,13 @@ class Round extends Model
     public function scores(){
         return $this->hasMany('App\Score');
     }
+
+    public function scorecard(){
+        return $this->belongsTo('App\Scorecard');
+    }
+
+    public static function bar(){
+        return 99;
+    }
+
 }

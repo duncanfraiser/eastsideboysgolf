@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Hole;
-use App\Course;
+use App\Arch;
+use App\Score;
+use App\Round;
 use App\Scorecard;
 
-class HoleController extends Controller
+class ArchController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($sc)
+    public function index()
     {
-
+        return view('arch.index');
     }
 
     /**
@@ -24,9 +25,9 @@ class HoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-
+        //
     }
 
     /**
@@ -37,23 +38,7 @@ class HoleController extends Controller
      */
     public function store(Request $request)
     {
-        $whites = $request->get('whites');
-        $pars = $request->get('pars');
-        $handicaps = $request->get('handicaps');
-        $holeNums = $request->get('holeNumbers');
-        $scorecardId = $request->get('scorecardId');
-        foreach ($holeNums as $key => $holeNum) {
-            $hole = new Hole([
-                'scorecard_id' => $scorecardId,
-                'hole_number' => $holeNum,
-                'whites' => $whites[$key],
-                'par' => $pars[$key],
-                'handicap' => $handicaps[$key]
-            ]);
-            $hole->save();
-        }
-        $sc = Scorecard::findOrFail($scorecardId);
-        return redirect('/')->with('success', $sc->name.' has been added to scorecards.');
+        //
     }
 
     /**
@@ -62,9 +47,11 @@ class HoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($archYear)
     {
-        //
+        $archive=Arch::where('yr',$archYear)->first();
+        $scorecards=Scorecard::orderBy('name')->get();
+        return view('arch.show', compact('scorecards', 'archive'));
     }
 
     /**

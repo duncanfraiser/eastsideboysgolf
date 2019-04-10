@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 @section('content')
     <div class="flex-center position-ref full-height">
          {{Form::open(['action' => 'RoundController@store'])}}
@@ -14,4 +14,4 @@
             </div>
          {!!Form::close()!!}
      </div>
-@endsection
+@endsection --}}

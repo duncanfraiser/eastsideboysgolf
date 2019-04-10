@@ -18,10 +18,12 @@
 // });
 Route::resource('/', 'LandingController');
 Auth::routes();
-
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('arch', 'ArchController');
 Route::resource('boy', 'BoyController');
 Route::resource('scorecard', 'ScorecardController');
+Route::match(['get', 'post'], 'ScorecardController@show');
 Route::resource('hole', 'HoleController');
 Route::resource('round', 'RoundController');
 Route::resource('score', 'ScoreController');

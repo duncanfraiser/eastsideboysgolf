@@ -19,18 +19,19 @@
         {{-- Styles --}}
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/custom.css') }}?1">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
         <style>
             @yield('styles')
         </style>
     </head>
     <body>
-
-              @include('flash-message')
-            @yield('content')
-
+        @include('flash-message')
+        @yield('content')
         <script type="text/javascript">
             @yield('scripts')
         </script>
-
     </body>
 </html>

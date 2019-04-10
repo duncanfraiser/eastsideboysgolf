@@ -39,44 +39,46 @@ class ScoreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $holeNumbers = $request->get('holeNumbers');
-        $scores = $request->get('scores');
-        $girs = $request->get('GIRs');
-        $fairways = $request->get('fairways');
-        $penalties = $request->get('penalties');
-        $roundId = $request->get('roundId');
-        foreach ($scores as $key => $score) {
-            $score = new Score;
-            $score->round_id = $roundId;
-            $score->hole_num = $holeNumbers[$key];
-            $score->total = $scores[$key];
-            if($girs!=null){
-                foreach($girs as $gir){
-                    if($gir == $score->hole_num ){
-                        $score->gir = 1;
-                    }
-                }
-            }
-            if($fairways!=null){
-                foreach($fairways as $fairway){
-                    if($fairway == $score->hole_num ){
-                        $score->fairway = 1;
-                    }
-                }
-            }
-            if($penalties!=null){
-                foreach($penalties as $penalty){
-                    if($penalty == $score->hole_num ){
-                        $score->penalty = 1;
-                    }
-                }
-            }
-            $score->save();
-        }
-        $round=Round::findOrFail($roundId);
-        $round->total_score = array_sum($scores);
-        $round->save();
-        return redirect('/round/'.$roundId);
+        // $holeNumbers = $request->get('holeNumbers');
+        // $scores = $request->get('scores');
+        // $girs = $request->get('GIRs');
+        // $fairways = $request->get('fairways');
+        // $penalties = $request->get('penalties');
+        // $roundId = $request->get('roundId');
+        // $round=Round::findOrFail($roundId);
+        // foreach ($scores as $key => $score) {
+        //     $score = new Score;
+        //     $score->round_id = $round->id;
+        //     $score->scorecard_id = $round->scorecard_id;
+        //     $score->hole_num = $holeNumbers[$key];
+        //     $score->total = $scores[$key];
+        //     if($girs!=null){
+        //         foreach($girs as $gir){
+        //             if($gir == $score->hole_num ){
+        //                 $score->gir = 1;
+        //             }
+        //         }
+        //     }
+        //     if($fairways!=null){
+        //         foreach($fairways as $fairway){
+        //             if($fairway == $score->hole_num ){
+        //                 $score->fairway = 1;
+        //             }
+        //         }
+        //     }
+        //     if($penalties!=null){
+        //         foreach($penalties as $penalty){
+        //             if($penalty == $score->hole_num ){
+        //                 $score->penalty = 1;
+        //             }
+        //         }
+        //     }
+        //     $score->save();
+        // }
+        //
+        // $round->total_score = array_sum($scores);
+        // $round->save();
+        // return redirect('/round/'.$roundId);
     }
 
 

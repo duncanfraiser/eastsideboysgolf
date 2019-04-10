@@ -16,7 +16,8 @@ class CreateRoundsTable extends Migration
         Schema::create('rounds', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('scorecard_id');
-            $table->integer('total_score')->default(0);;
+            $table->integer('total_score');
+            $table->text('day');
             $table->timestamps();
             $table->softDeletes();
         });
