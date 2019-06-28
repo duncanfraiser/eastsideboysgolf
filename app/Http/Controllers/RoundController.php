@@ -7,6 +7,8 @@ use App\Round;
 use App\Score;
 use App\Scorecard;
 use App\Shot;
+use App\Boy;
+use App\Arch;
 
 class RoundController extends Controller
 {
@@ -18,7 +20,10 @@ class RoundController extends Controller
     public function index()
     {
         $rounds = Round::get();
-        return view('round.index', compact('rounds'));
+        $boys = Boy::orderBy('first_name')->get();
+        $scorecards = Scorecard::orderBy('name')->get();
+        $archDates = Arch::pluck('yr');
+        return view('round.index', compact('rounds', 'boys', 'scorecards', 'archDates'));
     }
 
     /**
@@ -42,11 +47,13 @@ class RoundController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
+
         $round = new Round;
         $round->scorecard_id = $request->get('scorecardId');
-        $round->day = 'other';
+        $round->day = $request->get('day');
         $round->total_score = 0;
         $round->save();
+
         $holeNumbers = $request->get('holeNumbers');
         $pars = $request->get('pars');
         $scores = $request->get('scores');
@@ -59,11 +66,17 @@ class RoundController extends Controller
         foreach($scores as $key => $score){
             $score = new Score;
             $score->round_id = $round->id;
+            $score->day = $round->day;
             $score->scorecard_id = $round->scorecard_id;
             $score->hole_num = $holeNumbers[$key];
             $score->par = $scores[$key] - $pars[$key];
             $score->total = $scores[$key];
             $score->putt = $putts[$key];
+            if(($pars[$key]-2) == ($scores[$key] - $putts[$key])){
+                $score->gir = 1;
+            } else {
+                $score->gir = 0;
+            }
             $score->fairway = $fairways[$key];
             if($sands[$key]!=null){
                 $score->sand = $sands[$key];
@@ -75,27 +88,21 @@ class RoundController extends Controller
             } else {
                 $score->penalty = 0;
             }
-            if($girs!=null){
-                foreach($girs as $gir){
-                    if($gir == $score->hole_num ){
-                        $score->gir = 1;
-                    }
-                }
-            }
+
             $score->save();
         }
         $round->total_score = array_sum($scores);
-
-        $day = $request->get('day');
-        if($day!=null){
-            $round->day=$day;
-            $shot = new Shot;
-            $shot->boy_id = 1;
-            $shot->day = $day;
-            $shot->total = $round->total_score;
-            $shot->save();
-        }
         $round->save();
+
+        $shot = new Shot;
+        $shot->boy_id = 1;
+        $shot->round_id = $round->id;
+        $shot->scorecard_id = $round->scorecard_id;
+        $shot->day = $round->day;
+        $shot->total = $round->total_score;
+        $shot->skin = $request->get('skins');
+        $shot->save();
+
         return redirect('/')->with('success', "Round has been added.");
     }
 
@@ -108,13 +115,15 @@ class RoundController extends Controller
     public function show($id)
     {
         $round = Round::findOrFail($id);
+        $shot = Shot::where('round_id',$id)->first();
         $scorecard = Scorecard::findOrFail($round->scorecard_id);
+
         if($scorecard->total_holes == 9){
-            return view('round.showNine', compact('round', 'scorecard'));
+            return view('round.showNine', compact('round', 'scorecard', 'shot'));
         }else{
             $frontNine = $scorecard->holes()->where('hole_number', '<=', 9)->get();
             $backNine = $scorecard->holes()->where('hole_number', '>', 9)->get();
-            return view('round.showEighteen', compact('round', 'scorecard', 'frontNine', 'backNine'));
+            return view('round.showEighteen', compact('round', 'scorecard', 'frontNine', 'backNine', 'shot'));
         }
     }
 
@@ -126,11 +135,12 @@ class RoundController extends Controller
      */
     public function edit($id){
         $round = Round::findOrFail($id);
+        $shot = Shot::where('round_id',$id)->first();
         $scorecard = Scorecard::findOrFail($round->scorecard_id);
         if($scorecard->total_holes != 9){
-            return view('round.editEighteen', compact('round', 'scorecard'));
+            return view('round.editEighteen', compact('round', 'scorecard', 'shot'));
         }else{
-            return view('round.editNine', compact('round', 'scorecard'));
+            return view('round.editNine', compact('round', 'scorecard', 'shot'));
         }
     }
 
@@ -143,44 +153,58 @@ class RoundController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $round = Round::findOrFail($id);
-        $updatedScrs = $request->get('updatedScores');
-        $updatedGIRs = $request->get('updatedGIRs');
-        $updatedFairways = $request->get('updatedFairways');
-        $updatedPenalties = $request->get('updatedPenalties');
-        // reset all checks
-        foreach($round->scores as $score){
-            $score->gir = 0;
-            $score->fairway = 0;
-            $score->penalty = 0;
+        $round->day = $request->get('day');
+        // $holeNumbers = $request->get('holeNumbers');
+        $pars = $request->get('pars');
+        $scores = $request->get('scores');
+        $putts = $request->get('putts');
+
+        $fairways = $request->get('fairways');
+        $sands = $request->get('sands');
+        $penalties = $request->get('penalties');
+        $scorecard = $round->scorecard()->first();
+        $holePars = $scorecard->holes()->pluck('par');
+
+        foreach($round->scores()->get() as $key=>$score){
+
+            $score->total = $scores[$key];
+            $score->day = $round->day;
+            $score->par = $scores[$key] - $holePars[$key];
+            $score->putt = $putts[$key];
+            if(($pars[$key]-2) == ($scores[$key] - $putts[$key])){
+                $score->gir = 1;
+            } else {
+                $score->gir = 0;
+            }
+            $score->fairway = $fairways[$key];
+            if($sands[$key] != null){
+                $score->sand = $sands[$key];
+            }else{
+                $score->sand = 0;
+            }
+            if($penalties[$key] != null){
+                $score->penalty = $penalties[$key];
+            }else{
+                $score->penalty = 0;
+            }
             $score->save();
         }
-        foreach ($round->scores as $key => $score) {
-            $score = Score::findOrFail($score->id);
-            $score->total = $updatedScrs[$key];
-            if($updatedGIRs!=null){
-                foreach($updatedGIRs as $gir){
-                    if($gir == $score->hole_num ){
-                        $score->gir = 1;
-                    }
-                }
-            }
-            if($updatedFairways!=null){
-                foreach($updatedFairways as $fairway){
-                    if($fairway == $score->hole_num ){
-                        $score->fairway = 1;
-                    }
-                }
-            }
-            if($updatedPenalties!=null){
-                foreach($updatedPenalties as $penalty){
-                    if($penalty == $score->hole_num ){
-                        $score->penalty = 1;
-                    }
-                }
-            }
-            $score->save();
-        }
+
+
+        $round->total_score = array_sum($scores);
+
+        $round->save();
+
+        $shot = Shot::where('round_id',$id)->first();
+        $shot->boy_id = 1;
+        $shot->round_id = $round->id;
+        $shot->day = $round->day;
+        $shot->total = $round->total_score;
+        $shot->skin = $request->get('skins');
+        $shot->save();
+
         return redirect('/round/'.$id);
     }
 
@@ -192,7 +216,11 @@ class RoundController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $round = Round::findOrFail($id);
+        $round->delete();
+        return redirect('/')->with('success', "Round has been deleted.");
+
+
     }
 
 

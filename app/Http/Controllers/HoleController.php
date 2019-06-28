@@ -37,22 +37,24 @@ class HoleController extends Controller
      */
     public function store(Request $request)
     {
-        $whites = $request->get('whites');
+        $sc = new Scorecard([
+          'name' => $request->get('scorecardName'),
+          'course_rating' => $request->get('scorecardCourseRating'),
+          'slope_rating' => $request->get('scorecardSlopeRating'),
+          'total_holes' => $request->get('scorecardTotalHoles'),
+        ]);
+        $sc->save();
         $pars = $request->get('pars');
         $handicaps = $request->get('handicaps');
         $holeNums = $request->get('holeNumbers');
-        $scorecardId = $request->get('scorecardId');
         foreach ($holeNums as $key => $holeNum) {
             $hole = new Hole([
-                'scorecard_id' => $scorecardId,
+                'scorecard_id' => $sc->id,
                 'hole_number' => $holeNum,
-                'whites' => $whites[$key],
                 'par' => $pars[$key],
-                'handicap' => $handicaps[$key]
             ]);
             $hole->save();
         }
-        $sc = Scorecard::findOrFail($scorecardId);
         return redirect('/')->with('success', $sc->name.' has been added to scorecards.');
     }
 

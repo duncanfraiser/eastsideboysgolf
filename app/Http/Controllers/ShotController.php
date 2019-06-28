@@ -36,14 +36,20 @@ class ShotController extends Controller
      */
     public function store(Request $request)
     {
+        $page = $request->get('page');
         $shot = new Shot([
           'boy_id' => $request->get('boyId'),
           'day'=> $request->get('boyDay'),
-          'total'=> $request->get('total')
+          'total'=> $request->get('total'),
+          'skin'=> $request->get('skin')
         ]);
         $shot->save();
         $boy = Boy::findorfail($shot->boy_id);
-        return redirect('/')->with('success', $boy->first_name."'s Round has been added.");
+        if($page == 'boyShow'){
+            return redirect('/boy/'.$boy->id)->with('success', $boy->first_name."'s Round has been added.");
+        } else {
+            return redirect('/')->with('success', $boy->first_name."'s Round has been added.");
+        }
     }
 
     /**
@@ -88,6 +94,9 @@ class ShotController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $shot= Shot::findOrFail($id);
+        $boy = Boy::findOrFail($shot->boy_id);
+        $shot->delete();
+        return redirect('/boy/'.$boy->id)->with('success', "Score has been deleted.");;
     }
 }

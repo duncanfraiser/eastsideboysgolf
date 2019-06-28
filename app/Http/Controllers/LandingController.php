@@ -19,37 +19,26 @@ class LandingController extends Controller
     public function index()
     {
 
-        $archDates;
-        $currentYear = date('Y');
-        foreach (range(2016, $currentYear) as $key => $value) {
-            $archDates[$key]= $value;
-        }
-        $archive=Arch::where('yr',$currentYear)->first();
-        $scores = Score::get();
-        if($scores->sum('total') > 0){
-            $scoreAvg = (($scores->sum('total')/$scores->count())*18);
-            $girAvg = (($scores->sum('gir')/$scores->count())*100);
-            $fairwayAvg = (($scores->sum('fairway')/$scores->count())*100);
-            $penaltyAvg = (($scores->sum('penalty')/$scores->count())*100);
-        }else{
-            $scoreAvg = 0;
-            $girAvg = 0;
-            $fairwayAvg = 0;
-            $penaltyAvg = 0;
-        }
+        $archDates = Arch::pluck('yr');
+        // $currentYear = date('Y');
+        // dd(Carbon::now()->year);
+        // $archive=Arch::where('yr',$currentYear)->first();
         $joe = Boy::findOrFail(1);
         $boys = Boy::orderBy('first_name')->get();
         $mondays = Boy::getMondays();
         $wednesdays = Boy::getWednesdays();
         $fridays = Boy::getFridays();
         $outings = Boy::getOutings();
+        $playToPlay = Boy::getPlayToPlay();
+
         $mondayLeader = Boy::getMonLeader();
         $wednesdayLeader = Boy::getWedLeader();
         $fridayLeader = Boy::getFriLeader();
         $outingLeader = Boy::getOutLeader();
+        $ptpLeader = Boy::getPlayToPlayLeader();
         $scorecards = Scorecard::orderBy('name')->get();
 
-        return view('landing.index', compact('archive','boys', 'mondays', 'wednesdays', 'fridays', 'outings', 'mondayLeader', 'wednesdayLeader', 'fridayLeader', 'outingLeader', 'scorecards', 'girAvg', 'fairwayAvg', 'penaltyAvg', 'scoreAvg', 'joe', 'archDates'));
+        return view('landing.index', compact('boys', 'mondays', 'wednesdays', 'fridays', 'outings', 'mondayLeader', 'wednesdayLeader', 'fridayLeader', 'outingLeader', 'scorecards', 'joe', 'archDates', 'playToPlay', 'ptpLeader'));
     }
 
     /**

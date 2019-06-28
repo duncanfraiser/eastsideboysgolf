@@ -10,6 +10,7 @@ class Score extends Model
     use SoftDeletes;
     protected $fillable = [
         'round_id',
+        'day',
         'scorecard_id',
         'hole_num',
         'par',
@@ -23,4 +24,5 @@ class Score extends Model
     public function round(){
         return $this->belongsTo('App\Round');
     }
+
 }

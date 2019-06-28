@@ -36,17 +36,9 @@ class ScorecardController extends Controller
      */
     public function store(Request $request)
     {
-        $sc = new Scorecard([
-          'name' => $request->get('name'),
-          'course_rating' => $request->get('courseRating'),
-          'slope_rating' => $request->get('slopeRating'),
-          'total_holes' => $request->get('totalHoles'),
-        ]);
-
-        $sc->save();
+        $sc=$request;
         $frontHoleNums = [1,2,3,4,5,6,7,8,9];
-
-        if( $sc->total_holes == 9 ){
+        if( $sc->totalHoles == 9 ){
             return view( '/hole/createNineHoleScorecard', compact( 'sc', 'frontHoleNums' ) );
         }
         else{
@@ -103,16 +95,12 @@ class ScorecardController extends Controller
         $scorecard->slope_rating = $request->slope_rating;
         $scorecard->save();
         $updatedPars = $request->get('updatedPars');
-        $updatedWhites = $request->get('updatedWhites');
-        $updatedHandicaps = $request->get('updatedHandicaps');
 
         foreach ($scorecard->holes as $key=>$hole) {
             $hole->par = $updatedPars[$key];
-            $hole->whites = $updatedWhites[$key];
-            $hole->handicap = $updatedHandicaps[$key];
             $hole->save();
         }
-        return redirect('/');
+        return redirect('/')->with('success', $scorecard->name.' scorecard has been updated.');;
     }
 
     /**
@@ -124,7 +112,6 @@ class ScorecardController extends Controller
     public function destroy($id)
     {
         $scorecard = Scorecard::findOrFail($id);
-        $scorecard->holes()->delete();
         $scorecard->delete();
         return redirect('/');
     }

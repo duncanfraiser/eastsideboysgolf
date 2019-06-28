@@ -18,6 +18,7 @@ class CreateShotsTable extends Migration
             $table->integer('boy_id');
             $table->string('day');
             $table->integer('total');
+            $table->integer('skin');
             $table->timestamps();
             $table->softDeletes();
         });

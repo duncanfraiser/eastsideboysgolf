@@ -3,9 +3,8 @@
 @endsection
 @section('content')
     <div class="flex-container">
-        <div class="flex-landing-box">
-            <h3>Edit {!!$boy->first_name!!}'s Profile</h3>
-            <h4>Day Groups</h4>
+        <div class="flex-landing-box green-back">
+            <p class="modal-title dayBoxHeader">Edit {!!$boy->first_name!!}'s Profile</p>
             {!!Form::model($boy, ['method' => 'PATCH', 'action' => ['BoyController@update', $boy->id]])!!}
                 <div style="padding:5px">
                     {{Form::text('first_name', null, ['class' => 'form-control'])}}
@@ -16,18 +15,19 @@
                 <div class="left" style="margin: 0px 30px">
                     <div class="row">
                         <div class="column">
-                            <p>{!!Form::checkbox('mon', 1, true,['class' => 'addBoyCheckbox'])!!} Monday</p>
-                            <p>{!!Form::checkbox('wed', 1, false,['class' => 'addBoyCheckbox'])!!} Wednesday</p>
+                            <p style="margin-bottom:0px">{!!Form::checkbox('mon', 1, $boy->monday,['class' => 'addBoyCheckbox'])!!} Monday</p>
+                            <p style="margin-bottom:0px">{!!Form::checkbox('wed', 1, $boy->wednesday,['class' => 'addBoyCheckbox'])!!} Wednesday</p>
+                            <p style="margin-bottom:0px">{!!Form::checkbox('ptp', 1, $boy->play_to_play,['class' => 'addBoyCheckbox'])!!} Play-To-Play</p>
                         </div>
                         <div class="column">
-                            <p>{!!Form::checkbox('fri', 1, false,['class' => 'addBoyCheckbox'])!!} Friday</p>
-                            <p>{!!Form::checkbox('out', 1, false,['class' => 'addBoyCheckbox'])!!} Outing</p>
+                            <p style="margin-bottom:0px">{!!Form::checkbox('fri', 1, $boy->friday,['class' => 'addBoyCheckbox'])!!} Friday</p>
+                            <p style="margin-bottom:0px">{!!Form::checkbox('out', 1, $boy->outing,['class' => 'addBoyCheckbox'])!!} Outing</p>
                         </div>
                     </div>
                 </div>
-            <a href={!! URL::previous() !!} class="btn btn-primary btn-sm">Back</a>
-            {!!Form::submit('Update',['class'=>'btn btn-success btn-sm'])!!}
+            {!!Form::submit('Update',['class'=>'btn btn-primary btn-sm', 'style'=>"float:right;margin-right:5px"])!!}
             {!!Form::close()!!}
+            <a href={!! URL::previous() !!} class="btn btn-primary btn-sm" style="float:right;margin-right:5px">Back</a>
         </div>
     </div>
 @endsection

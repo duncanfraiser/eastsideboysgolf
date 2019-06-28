@@ -1,97 +1,117 @@
 @extends('layouts.template')
-@section('styles')
-    input[type="checkbox"] {
-      transform:scale(1.5, 1.5);
-    }
-@endsection
 @section('content')
-<div class="flex-center position-ref full-height">
-    {!!Form::model($round, ['method' => 'PATCH', 'action' => ['RoundController@update', $round->id]])!!}
-    <table id='golfcard' class='form-group'>
-        <tr class='red'>
-            <th colspan="11" class='courseName' style="text-align: left">
-                {!!$scorecard->name!!}
-            </th>
-        </tr>
-        <col span="1" class="wide">
-        <tr class='blue'>
-            <th style="text-align: right">HOLE</th>
-            @foreach ( $scorecard->holes as $hole )
-                <td>{!!$hole->hole_number!!}</td>
-            @endforeach
-            <th>OUT</th>
-        </tr>
-        <tr class="white">
-            <th style="text-align: right">WHITE TEES</th>
-            @foreach ($scorecard->holes as $hole )
-                <td id='scoreField'>{!!$hole->whites!!}</td>
-            @endforeach
-            <td>{!!$scorecard->holes->sum('whites')!!}</td>
-        </tr>
-        <tr class='green'>
-            <th style="text-align: right">PAR</th>
-            @foreach( $scorecard->holes as $hole )
-                <td id='scoreField'>{!!$hole->par!!}</td>
-            @endforeach
-            <td>{!!$scorecard->holes->sum('par')!!}</td>
-        </tr>
-        <tr class="grey">
-            <th style="text-align: right">SCORE</th>
-            @foreach( $round->scores as $key=>$score )
-                <td id='scoreField' style='width:100%'>{!!Form::text('updatedScores[]', $score->total )!!}</td>
-            @endforeach
-            <td id='scoreField'>{!!$round->total_score!!}</td>
-        </tr>
+<div style="margin:10% 1%">
+        {!!Form::model($round, ['method' => 'PATCH', 'action' => ['RoundController@update', $round->id]])!!}
 
-        <tr class='grey'>
-            <th style="text-align: right">GIR</td>
-            @foreach( $round->scores as $key=>$score )
-                @if($score->gir != 1)
-                    <td>{!!Form::checkbox('updatedGIRs[]', $score->hole_num, false,['class' => 'checkcheky'])!!}</td>
-                @else
-                    <td>{!!Form::checkbox('updatedGIRs[]', $score->hole_num, true,['class' => 'checkcheky'])!!}</td>
-                @endif
-            @endforeach
-            <td></td>
-        </tr>
+        <table id='golfcard' class='form-group'>
 
-        <tr class='grey'>
-            <th style="text-align: right">FAIRWAY</td>
-            @foreach( $round->scores as $key=>$score )
-                @if($score->fairway != 1)
-                    <td>{!!Form::checkbox('updatedFairways[]', $score->hole_num, false,['class' => 'checkcheky'])!!}</td>
-                @else
-                    <td>{!!Form::checkbox('updatedFairways[]', $score->hole_num, true,['class' => 'checkcheky'])!!}</td>
-                @endif
-            @endforeach
-            <td></td>
-        </tr>
-
-        <tr class='grey'>
-            <th style="text-align: right">PENALTY</td>
-            @foreach($round->scores as $key=>$score)
-                @if($score->penalty != 1)
-                    <td>{!!Form::checkbox('updatedPenalties[]', $score->hole_num, false,['class' => 'checkcheky'])!!}</td>
-                @else
-                    <td>{!!Form::checkbox('updatedPenalties[]', $score->hole_num, true,['class' => 'checkcheky'])!!}</td>
-                @endif
-            @endforeach
-            <td></td>
-        </tr>
-        <tr class='gold'>
-            <th style="text-align: right">HANDICAP</th>
-                        @foreach($scorecard->holes as $hole)
-                    <td id='scoreField'>{!!$hole->handicap!!}</td>
+            <tr class='green-back cardHeader'>
+                <th colspan="11" class='courseName' style="text-align: left">
+                    {!!$scorecard->name!!}
+                    <span style="font-size:14px">{!!$scorecard->slope_rating!!} / {!!$scorecard->course_rating!!}</span>
+                    <p style="text-align:left;font-size:14px"><strong>Day Group:</strong>
+                      <select name="day" class="greyColor" required>
+                          @if($round->day != 'Monday')
+                              <option value="Monday">Monday</option>
+                          @else
+                              <option selected="selected" value="Monday">Monday</option>
+                          @endif
+                          @if($round->day != 'Wednesday')
+                              <option value="Wednesday">Wednesday</option>
+                          @else
+                              <option selected="selected" value="Wednesday">Wednesday</option>
+                          @endif
+                          @if($round->day != 'Friday')
+                              <option value="Friday">Friday</option>
+                          @else
+                              <option selected="selected" value="Friday">Friday</option>
+                          @endif
+                          @if($round->day != 'Outing')
+                              <option value="Outing">Outing</option>
+                          @else
+                              <option selected="selected" value="Outing">Outing</option>
+                          @endif
+                          @if($round->day != 'Play-To-Play')
+                              <option value="Play-To-Play">Play-To-Play</option>
+                          @else
+                              <option selected="selected" value="Play-To-Play">Play-To-Play</option>
+                          @endif
+                      </select>
+                      <span style="text-align:right">  &nbsp;&nbsp;&nbsp;&nbsp;<strong>Skins: </strong><input type="number" name="skins" value={!!$shot->skin!!} required></span>
+                    </p>
+                </th>
+            </tr>
+            <col span="1" class="wide">
+            <tr class='blue-back'>
+                <th style="text-align: right">HOLE</th>
+                @foreach ( $scorecard->holes as $hole )
+                    @if($hole->hole_number < 10)
+                        <td>{!!$hole->hole_number!!}</td>
+                    @endif
                 @endforeach
-            <td>OUT</td>
-        </tr>
-        <tr class='button-row'>
-            <th colspan="11" style="text-align:right">
-                <a href={!!URL::previous()!!} class="btn btn-primary btn-sm">Back</a>
-                {!!Form::submit('Update', ['class'=>'btn btn-success btn-sm'])!!}
-            </th>
-        </tr>
-    </table>
-    {!!Form::close()!!}
+                <td>OUT</td>
+            </tr>
+            <tr class='red-back'>
+                <th style="text-align: right">PAR</th>
+                @foreach( $scorecard->holes as $hole )
+                    @if($hole->hole_number < 10)
+                        <td id='scoreField'>{!!$hole->par!!}</td>
+                    @endif
+                @endforeach
+                <td>{!!$scorecard->getTotalFrontPars()!!}</td>
+            </tr>
+            <tr>
+                <th style="text-align: right">SCORE</th>
+                @foreach( $round->getFrontNineScores() as $score )
+                    <td id='scoreField' style='width:100%'>{!!Form::number('scores[]',$score->total,['style'=>'text-align:center'])!!}</td>
+                @endforeach
+                <td id='scoreField'>{!!$round->getFrontNineTotalScore()!!}</td>
+            </tr>
+            <tr>
+                <th style="text-align: right">PUTT</th>
+                @foreach( $round->getFrontNineScores() as $score )
+                        <td id='scoreField' style='width:100%'>{!!Form::number('putts[]',$score->putt,['style'=>'text-align:center'])!!}</td>
+                @endforeach
+                <td id='scoreField'>{!!$round->getFrontNineTotalScore()!!}</td>
+            </tr>
+            <tr>
+                <th style="text-align: right">FAIRWAY</th>
+                @foreach( $round->getFrontNineScores() as $score )
+                        <td>{!!Form::select('fairways[]', ['0'=>'', '1' => 'L', '2' => 'R', '3'=>'C' ],$score->fairway,['class'=>'form-control',])!!}</td>
+                @endforeach
+                <td id='scoreField'>{!!$round->getFrontNineFairways()!!}</td>
+            </tr>
+            <tr>
+                <th style="text-align: right">SAND</th>
+                @foreach( $round->getFrontNineScores() as $score )
+                    @if($score->sand > 0)
+                        <td id='scoreField' style='width:100%'>{!!Form::number('sands[]',$score->sand,['style'=>'text-align:center'])!!}</td>
+                    @else
+                        <td id='scoreField' style='width:100%'>{!!Form::number('sands[]',null,['style'=>'text-align:center'])!!}</td>
+                    @endif
+                @endforeach
+                <td id='scoreField'>{!!$round->getFrontNineSand()!!}</td>
+            </tr>
+            <tr>
+                <th style="text-align: right">PENALTY</th>
+                @foreach( $round->getFrontNineScores() as $score )
+                    @if($score->penalty > 0)
+                        <td id='scoreField' style='width:100%'>{!!Form::number('penalties[]',$score->penalty,['style'=>'text-align:center'])!!}</td>
+                    @else
+                        <td id='scoreField' style='width:100%'>{!!Form::number('penalties[]',null,['style'=>'text-align:center'])!!}</td>
+                    @endif
+                @endforeach
+                <td id='scoreField'>{!!$round->getFrontNinePenalty()!!}</td>
+            </tr>
+            <tr class='button-row'>
+                <td colspan="11" style="text-align:right;padding: 15px">
+                    <a href={!!url('/round')!!} class="btn btn-success btn-sm">Cancel</a>
+                    <a href={!!url('/')!!} class="btn btn-success btn-sm">Home</a>
+                    {!!Form::submit('Update', ['class'=>'btn btn-success btn-sm'])!!}
+                </td>
+            </tr>
+        </table>
+        {!!Form::close()!!}
+
 </div>
 @endsection

@@ -7,6 +7,8 @@ use App\Arch;
 use App\Score;
 use App\Round;
 use App\Scorecard;
+use App\Day;
+use App\Boy;
 
 class ArchController extends Controller
 {
@@ -49,9 +51,13 @@ class ArchController extends Controller
      */
     public function show($archYear)
     {
+        $days = Day::get();
         $archive=Arch::where('yr',$archYear)->first();
         $scorecards=Scorecard::orderBy('name')->get();
-        return view('arch.show', compact('scorecards', 'archive'));
+        $rounds = Round::get();
+        $boys = Boy::orderBy('first_name')->get();
+        $archDates = Arch::pluck('yr');
+        return view('arch.show', compact('scorecards', 'archive', 'days', 'rounds', 'boys','archDates'));
     }
 
     /**

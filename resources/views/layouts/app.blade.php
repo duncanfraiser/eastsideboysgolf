@@ -72,10 +72,19 @@
                 </div>
             </div>
         </nav>
+        <div>Rebel</div>
+        @include('flash-message')
 
         <main class="py-4">
             @yield('content')
         </main>
     </div>
+
+
+        <script type="text/javascript">
+            @yield('scripts')
+        </script>
+
+
 </body>
 </html>

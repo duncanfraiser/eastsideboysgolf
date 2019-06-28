@@ -11,9 +11,7 @@ class Hole extends Model
     protected $fillable = [
         'scorecard_id',
         'hole_number',
-        'whites',
-        'par',
-        'handicap'
+        'par'
       ];
 
     // public function holes(){
